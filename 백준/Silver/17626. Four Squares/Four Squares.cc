@@ -1,35 +1,31 @@
 #include<iostream>
 #include<vector>
-#include<cmath>
+#include <climits>
 
-std::vector<int> dp(50001, 0);
+std::vector<int> dp(50001, INT_MAX);
 
 int main()
 {
     int n;
     std::cin>>n;
     
-    for (int i = 1; i * i <= dp.size(); ++i)
+    dp[0] = 0;  // 0을 만드는 데 필요한 제곱수 항의 개수는 0
+    
+    //기저 생성
+    //제곱수는 항상 1;
+    for (int i = 1; i * i <= n; ++i)
     {
         dp[i * i] = 1;
     }
     
-    for (int i = 1; i <= n; i++)
-	{
-		int min = 10000;
-		if (dp[i] != 1)
-		{
-			for (int j = 1; j <= std::sqrt(i); j++)
-			{
-				int a = dp[j * j] + dp[i - j * j];
-				if (min > a)
-				{
-					min = a;
-					dp[i] = a;
-				}
-			}
-		}
-	}
-	std::cout << dp[n];
-	return 0;
+    // 최소 항 계산
+    for (int i = 1; i <= n; ++i) 
+    {
+        for (int j = 1; j * j <= i; ++j) 
+        {
+            dp[i] = std::min(dp[i], dp[j * j] + dp[i - j * j]);
+        }
+    }
+    std::cout<<dp[n]<<std::endl;
 }
+
