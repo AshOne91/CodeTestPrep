@@ -1,52 +1,51 @@
-#include <iostream>
-#include <queue>
+#include<iostream>
+#include<vector>
+#include<queue>
 
-using namespace std;
+std::vector<int> checkResult(100001, 0);
 
-#define MAX 100001
-
-int N, K; // N : 수빈이의 위치, K : 동생의 위치
-int visited[MAX] = {};
-
-int bfs() {
-    queue<int> q; 
-    q.push(N);
-    visited[N] = 0;
-    while (!q.empty()) {
-        int curPosition = q.front();
-        q.pop();
-
-        if (curPosition == K) break;
-
-        int minusPosition = curPosition - 1;
-        int plusPosition = curPosition + 1;
-        int multiPosition = curPosition * 2;
-
-        // 1. -1
-        if (minusPosition >= 0 && visited[minusPosition] == 0) {
-            q.push(minusPosition);
-            visited[minusPosition] = visited[curPosition] + 1;
+int main()
+{
+    int N, K;
+    std::cin>>N>>K;
+    
+    std::queue<int> qu;
+    qu.push(N);
+    checkResult[N] = 0;
+    
+    while (!qu.empty())
+    {
+        int curPos = qu.front();
+        qu.pop();
+        
+        if (curPos == K)
+        {
+            break;
         }
-
-        // 2. + 1
-        if (plusPosition < MAX && visited[plusPosition] == 0){
-            q.push(plusPosition);
-            visited[plusPosition] = visited[curPosition] + 1;
+        
+        int minusPos = curPos - 1;
+        int plusPos = curPos + 1;
+        int multiPos = curPos * 2;
+        
+        if (minusPos >= 0 && checkResult[minusPos] == 0)
+        {
+            qu.push(minusPos);
+            checkResult[minusPos] = checkResult[curPos] + 1;
         }
-
-        // 3. * 2
-        if (multiPosition < MAX && visited[multiPosition] == 0) {
-            q.push(multiPosition);
-            visited[multiPosition] = visited[curPosition] + 1;
+        
+        if (plusPos < 100001 && checkResult[plusPos] == 0)
+        {
+            qu.push(plusPos);
+            checkResult[plusPos] = checkResult[curPos] + 1;
+        }
+        
+        if (multiPos < 100001 && checkResult[multiPos] == 0)
+        {
+            qu.push(multiPos);
+            checkResult[multiPos] = checkResult[curPos] + 1;
         }
     }
-
-    return visited[K];
+    
+    std::cout<<checkResult[K];
 }
 
-int main() {
-    cin >> N >> K;
-    cout << bfs();
-
-    return 0;
-}
