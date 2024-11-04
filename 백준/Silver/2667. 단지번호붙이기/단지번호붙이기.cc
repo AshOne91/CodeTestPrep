@@ -1,65 +1,74 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <string>
-using namespace std;
- 
-const int MAX = 25;
-int N;
-int map[MAX][MAX] = { 0, };
-bool visited[MAX][MAX] = { 0, };
-int dy[] = { 0,0,1,-1 };
-int dx[] = { 1,-1,0,0 };
-int label = 1;
-vector<int> v;
-int house = 0;
- 
-void DFS(int y, int x) {
-    visited[y][x] = true;
-    map[y][x] = label;
-    house++;
- 
-    for (int i = 0; i < 4; i++) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
-        
-        if (nx < 0 || ny < 0 || nx >= N || ny >= N)
-            continue;
- 
-        if (map[ny][nx] == 1 && visited[ny][nx] == 0) {
-            DFS(ny, nx);
-        }
-    }
-}
- 
-int main() {
-    cin >> N;
+#include<iostream>
+#include<vector>
+#include<stack>
+#include<algorithm>
+#include<string>
+
+std::vector<std::pair<int, int>> dir = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+
+int main()
+{
+    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
+    std::cin.tie(NULL);                // 입출력 묶음 해제
+    std::cout.tie(NULL);                // 입출력 묶음 해제
+
+    int N;
+    std::cin>>N;
     
-    for (int i = 0; i < N; i++) {
-        string input;
-        cin >> input;
+    std::vector<std::vector<int>> map(N, std::vector<int>(N, 0));
+    for(int i = 0; i < N; ++i)
+    {
+        std::string input;
+        std::cin >> input;
  
-        for (int j = 0; j < N; j++) {
+        for (int j = 0; j < N; j++) 
+        {
             map[i][j] = input.at(j) - '0';
         }
     }
- 
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            if (map[i][j] == 1 && visited[i][j] == 0) {
-                DFS(i, j);
-                label++;
-                v.push_back(house);
-                house = 0;
+    
+    std::vector<int> result;
+    
+    for(int y = 0; y < N; ++y)
+    {
+        for(int x = 0; x < N; ++x)
+        {
+            int cnt = 0;
+            if (map[y][x] != 1)        
+            {
+                continue;
             }
+            cnt++;
+            std::stack<std::pair<int, int>> st;
+            map[y][x] = 2;
+            st.push({y, x});
+            while(!st.empty())
+            {
+                auto curPos = st.top();
+                st.pop();
+                
+                for (auto& nextPos : dir)
+                {
+                    int nextY = curPos.first + nextPos.first;
+                    int nextX = curPos.second + nextPos.second;
+                    
+                    if (nextY < 0 || nextY >= N || nextX < 0 || nextX >= N || map[nextY][nextX] != 1)
+                    {
+                        continue;
+                    }
+                    cnt++;
+                    map[nextY][nextX] = 2;
+                    st.push({nextY, nextX});
+                }
+            }
+            result.push_back(cnt);
         }
     }
- 
-    sort(v.begin(), v.end());
- 
-    cout << label-1 << endl;
-    for (int i = 0; i < v.size(); i++) {
-        cout << v[i] << endl;
+    std::sort(result.begin(), result.end());
+    std::cout<<result.size()<<"\n";
+    for(auto value : result)
+    {
+        std::cout<<value<<"\n";
     }
- 
+    return 0;
 }
