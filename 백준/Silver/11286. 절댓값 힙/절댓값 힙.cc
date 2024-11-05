@@ -1,41 +1,45 @@
-#include <iostream>
-#include <queue>
-#include <vector>
-#include <cmath>
-using namespace std;
- 
-struct cmp{ // 정렬 기준 바꾸는 함수
-    bool operator()(int a, int b){
-        if(abs(a) == abs(b))
-            return a > b; // 절대값이 같은 경우 가장 작은 원소로
-        return abs(a) > abs(b); // 절대값이 작은 원소로
-    }
-};
- 
-int main(){
-    int n, x;
-    priority_queue<int, vector<int>, cmp> q;
-    vector<int> v;
-    cin >> n;
- 
-    for (int i = 0; i < n;i++){
-        cin >> x;
-        if(x == 0){
-            if(q.empty()){
-                // 큐가 비어있을 때 0을 출력
-                v.push_back(0);
-            }else{
-                v.push_back(q.top()); // 가장 작은 원소 출력
-                q.pop(); // 제거
+#include<iostream>
+#include<queue>
+#include<vector>
+
+int main()
+{
+    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
+    std::cin.tie(NULL);                // 입출력 묶음 해제
+    std::cout.tie(NULL);                // 입출력 묶음 해제
+    
+    auto cmp = [](int lhs, int rhs)
+    {
+        if (std::abs(lhs) == std::abs(rhs))
+        {
+            return lhs > rhs;
+        }
+        return std::abs(lhs) > std::abs(rhs);
+    };
+    std::priority_queue<int, std::vector<int>, decltype(cmp)> minHeap(cmp);
+    
+    int N;
+    std::cin>>N;
+    
+    for (int i = 0; i < N; ++i)
+    {
+        int num;
+        std::cin>>num;
+        if (num == 0)
+        {
+            if (minHeap.empty())
+            {
+                std::cout<<0<<"\n";
             }
-        }else{
-            q.push(x); // 원소 추가
+            else
+            {
+                std::cout<<minHeap.top()<<"\n";
+                minHeap.pop();
+            }
+        }
+        else
+        {
+            minHeap.push(num);
         }
     }
- 
-    for (int i = 0; i < v.size(); i++){
-        cout << v[i] << '\n'; // 정답 출력
-    }
- 
-    return 0;
 }
