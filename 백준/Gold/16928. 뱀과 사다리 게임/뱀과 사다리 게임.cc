@@ -1,56 +1,39 @@
 #include <iostream>
 #include <queue>
 
-using namespace std;
+int main()
+{
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(NULL);
 
-int N, M, x, y;
-int moving[101], record[101];
+    int N, M, start, end;
+    std::cin >> N >> M;
 
-void BFS(int start) {
-	queue < pair<int, int>> q;
-	q.push(make_pair(start, 0));
-	record[start] = 0;
+    int warp[101];
+    bool visited[101] = {false};
+    for (int i = 1; i <= 100; ++i) warp[i] = i;
 
-	while (!q.empty()) {
-		int now = q.front().first;
-		int count = q.front().second;
-		q.pop();
+    while (N--) std::cin >> start >> end, warp[start] = end;
+    while (M--) std::cin >> start >> end, warp[start] = end;
 
-		for (int i = 1; i <= 6; i++) {
-			int tempCount = count; // 6번 모두 같은 횟수에서 계산되어야하므로 임시변수 이용
-			if (now + i > 100) // 주사위를 던져서 100을 넘어가면 pass
-				continue;
-			int next = now + i; // 주사위 돌린 이후 값
-			tempCount++;
-			if (moving[next] != 0) { // 만약 주사위로 이동한 위치에 뱀 또는 사다리가 있다면
-				next = moving[next];
-			}
-			if (record[next] > tempCount) { // 이동 후 기존 주사위 횟수보다 더 적은 횟수로 도착할 수 있다면
-				record[next] = tempCount;
-				q.push(make_pair(next, tempCount));
-			}
-		}
-	}
-	
-}
+    std::queue<std::pair<int, int>> q;
+    q.push({1, 0});
+    visited[1] = true;
 
-int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cin >> N >> M;
-	for (int i = 1; i <= 100; i++) {
-		record[i] = 987654321;
-	}
-	for (int i = 0; i < N; i++) {
-		cin >> x >> y;
-		moving[x] = y;
-	}
-	for (int i = 0; i < M; i++) {
-		cin >> x >> y;
-		moving[x] = y;
-	}
+    while (!q.empty())
+    {
+        auto [pos, moves] = q.front(); q.pop();
+        if (pos == 100) { std::cout << moves; return 0; }
 
-	BFS(1);
-
-	cout << record[100];
+        for (int i = 1; i <= 6; ++i)
+        {
+            int next = warp[pos + i];
+            if (next <= 100 && !visited[next])
+            {
+                visited[next] = true;
+                q.push({next, moves + 1});
+            }
+        }
+    }
+    return 0;
 }
