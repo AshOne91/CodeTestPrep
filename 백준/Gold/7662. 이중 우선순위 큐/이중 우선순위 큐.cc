@@ -1,79 +1,77 @@
 #include <iostream>
 #include <queue>
-#include <map>
-
-using namespace std;
-
-int t, k, n;
-char q;
-
-priority_queue<int> maxpq;
-priority_queue<int, vector<int>, greater<int>> minpq;
-map<int, int> cntmp;
-
-void init()
-{
-    while (!maxpq.empty())
-        maxpq.pop();
-    while (!minpq.empty())
-        minpq.pop();
-    cntmp.clear();
-    return;
-}
-
-void update()
-{
-    while (!maxpq.empty() && !cntmp[maxpq.top()])
-        maxpq.pop();
-    while (!minpq.empty() && !cntmp[minpq.top()])
-        minpq.pop();
-    return;
-}
+#include <unordered_map>
+#include <string>
+#include <vector>
 
 int main()
 {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
+    std::cin.tie(NULL);                // 입출력 묶음 해제
+    std::cout.tie(NULL);               // 입출력 묶음 해제
 
-    cin >> t;
-    while (t--)
+    int T;
+    std::cin >> T;
+    auto cmp = [](int left, int right) { return left > right; };
+
+    for (int i = 0; i < T; ++i)
     {
-        cin >> k;
+        std::priority_queue<int, std::vector<int>, decltype(cmp)> minQu(cmp);
+        std::priority_queue<int> maxQu;
+        std::unordered_map<int, int> deleteCount;
 
-        init();
-
-        while (k--)
+        int Q;
+        std::cin >> Q;
+        for (int j = 0; j < Q; ++j)
         {
-            cin >> q >> n;
-            if (q == 'I')
+            std::string cmd;
+            std::cin >> cmd;
+            int value;
+            std::cin >> value;
+
+            if (cmd == "I")
             {
-                maxpq.push(n);
-                minpq.push(n);
-                cntmp[n]++;
+                minQu.push(value);
+                maxQu.push(value);
+                deleteCount[value]++;
             }
-            else if (n == 1)
+            else if (cmd == "D")
             {
-                if (!maxpq.empty())
+                if (value == 1)
                 {
-                    cntmp[maxpq.top()]--;
-                    maxpq.pop();
+                    while (!maxQu.empty() && deleteCount[maxQu.top()] == 0) maxQu.pop();
+                    if (!maxQu.empty())
+                    {
+                        int maxVal = maxQu.top();
+                        maxQu.pop();
+                        deleteCount[maxVal]--;
+                    }
+                }
+                else if (value == -1)
+                {
+                    while (!minQu.empty() && deleteCount[minQu.top()] == 0) minQu.pop();
+                    if (!minQu.empty())
+                    {
+                        int minVal = minQu.top();
+                        minQu.pop();
+                        deleteCount[minVal]--;
+                    }
                 }
             }
-            else if (n == -1)
-            {
-                if (!minpq.empty())
-                {
-                    cntmp[minpq.top()]--;
-                    minpq.pop();
-                }
-            }
-            update();
         }
 
-        if (maxpq.empty() || minpq.empty())
-            cout << "EMPTY\n";
+        // 최대값과 최소값 갱신 후 출력
+        while (!maxQu.empty() && deleteCount[maxQu.top()] == 0) maxQu.pop();
+        while (!minQu.empty() && deleteCount[minQu.top()] == 0) minQu.pop();
+
+        if (maxQu.empty() || minQu.empty())
+        {
+            std::cout << "EMPTY\n";
+        }
         else
-            cout << maxpq.top() << " " << minpq.top() << "\n";
+        {
+            std::cout << maxQu.top() << " " << minQu.top() << "\n";
+        }
     }
 
     return 0;
