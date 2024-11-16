@@ -1,38 +1,54 @@
 #include <iostream>
+#include <vector>
 #include <algorithm>
 
-using namespace std;
-#define MAX 9
+int N, M;
+std::vector<int> values;
+std::vector<bool> visited;
 
-int N,M;
-int first[MAX];
-int arr[MAX];
-bool visited[MAX];
+void backtracking(std::vector<int>& result)
+{
+    // 길이가 M인 수열을 완성하면 출력
+    if (static_cast<int>(result.size()) == M)
+    {
+        for (size_t i = 0; i < result.size(); ++i)
+        {
+            if (i > 0) std::cout << " ";
+            std::cout << result[i];
+        }
+        std::cout << "\n";
+        return;
+    }
 
-void dfs(int num, int k) { //현재 위치
-    if(k==M) { //목표인 M까지 도달했다면
-        for(auto i =0;i<M;i++)
-            cout << arr[i] << " "; //arr에 저장한 값 M개 만큼 출력
-        cout << "\n";
-    }else { //목표에 도달하지 않았다면
-        for(auto i=1; i<=N;i++) { //★
-            if(!visited[i]) { //방문 안 했다면
-                visited[i]=true; //방문 표시
-                arr[k]=first[i-1]; // 정렬한 N값을 arr에 저장
-                dfs(i+1,k+1); //더 깊게 들어가자. (M까지)
-                visited[i]=false; //백트래킹 설정 
-            }
+    // 순열 생성
+    for (int i = 0; i < N; ++i)
+    {
+        if (!visited[i]) // 이미 사용한 값은 제외
+        {
+            visited[i] = true;          // 방문 표시
+            result.push_back(values[i]); // 값 추가
+            backtracking(result);       // 다음 단계 진행
+            result.pop_back();          // 백트래킹
+            visited[i] = false;         // 방문 해제
         }
     }
 }
 
-int main() {
-    cin >> N >> M;
+int main()
+{
+    std::cin >> N >> M;
+    values.resize(N);
+    visited.resize(N, false);
 
-    for(int i=0;i<N;i++)
-        cin >> first[i];
-    
-    sort(first,first+N); //정렬
+    for (int i = 0; i < N; ++i)
+    {
+        std::cin >> values[i];
+    }
 
-    dfs(1,0);
+    std::sort(values.begin(), values.end()); // 사전 순 정렬
+
+    std::vector<int> result;
+    backtracking(result); // 백트래킹 시작
+
+    return 0;
 }
