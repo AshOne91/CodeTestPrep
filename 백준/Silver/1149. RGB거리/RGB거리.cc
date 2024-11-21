@@ -1,20 +1,31 @@
 #include <iostream>
 #include <algorithm>
 using namespace std;
-int house[1001][3];
+
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+
     int N;
-    int cost[3];
-    house[0][0] = 0;
-    house[0][1] = 0;
-    house[0][2] = 0;
     cin >> N;
-    for(int i = 1; i <= N; ++i)
-    {
-        cin >> cost[0] >> cost[1] >> cost[2];
-        house[i][0] = min(house[i-1][1],house[i-1][2]) + cost[0];
-        house[i][1] = min(house[i-1][0],house[i-1][2]) + cost[1];
-        house[i][2] = min(house[i-1][1],house[i-1][0]) + cost[2];
+
+    int prevR = 0, prevG = 0, prevB = 0; // 이전 집의 최솟값 저장
+    for (int i = 0; i < N; ++i) {
+        int R, G, B;
+        cin >> R >> G >> B;
+
+        // 현재 비용 계산 (이전 값 기반으로 업데이트)
+        int currR = R + min(prevG, prevB);
+        int currG = G + min(prevR, prevB);
+        int currB = B + min(prevR, prevG);
+
+        // 이전 값을 현재 값으로 업데이트
+        prevR = currR;
+        prevG = currG;
+        prevB = currB;
     }
-    cout << min(house[N][2],min(house[N][0],house[N][1]));
+
+    // 결과 출력: 마지막 집의 최소 비용
+    cout << min({prevR, prevG, prevB}) << '\n';
+    return 0;
 }
