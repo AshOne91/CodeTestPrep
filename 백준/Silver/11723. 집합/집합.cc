@@ -1,66 +1,68 @@
-#include<iostream>
-#include<unordered_set>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_set>
+
+std::unordered_set<int> board;
 
 int main()
 {
-    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
-    std::cin.tie(NULL);                // 입출력 묶음 해제
-    std::cout.tie(NULL);                // 입출력 묶음 해제
-
-    std::unordered_set<int> setList;
+    std::ios_base::sync_with_stdio(false);;
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
+    
     int M;
     std::cin>>M;
-    for(int i = 0; i < M; ++i)
+    for (int i = 0; i < M; ++i)
     {
         std::string command;
+        int M;
         std::cin>>command;
-        
-        int num;
         if (command == "add")
         {
-            std::cin>>num;
-            setList.insert(num);
+            std::cin>>M;
+            board.insert(M);
         }
-        else if(command == "remove")
+        else if (command == "remove")
         {
-            std::cin>>num;
-            setList.erase(num);
+            std::cin>>M;
+            board.erase(M);
         }
-        else if(command == "check")
+        else if (command == "check")
         {
-            std::cin>>num;
-            if (setList.find(num) == setList.end())
-            {
-                std::cout<<0<<"\n";
-            }
-            else
+            std::cin>>M;
+            if (board.find(M) != board.end())
             {
                 std::cout<<1<<"\n";
             }
-        }
-        else if(command == "toggle")
-        {
-            std::cin>>num;
-            if (setList.find(num) == setList.end())
+            else
             {
-                setList.insert(num);
+                std::cout<<0<<"\n";
+            }
+        }
+        else if (command == "toggle")
+        {
+            std::cin>>M;
+            auto it = board.find(M);
+            if (it != board.end())
+            {
+                board.erase(it);
             }
             else
             {
-                setList.erase(num);
+                board.insert(M);
             }
         }
-        else if(command == "all")
+        else if (command == "all")
         {
-            for(int i = 1; i <= 20; ++i)
+            for (int i = 1; i < 21; ++i)
             {
-                setList.insert(i);
+                board.insert(i);
             }
         }
-        else if(command == "empty")
+        else if (command == "empty")
         {
-            setList.clear();
+            board.clear();
         }
     }
-    return 0;
 }
