@@ -1,9 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <unordered_set>
 
-std::unordered_set<int> board;
+std::vector<int> board(21, 0);
 
 int main()
 {
@@ -16,53 +15,41 @@ int main()
     for (int i = 0; i < M; ++i)
     {
         std::string command;
-        int M;
+        int num;
         std::cin>>command;
         if (command == "add")
         {
-            std::cin>>M;
-            board.insert(M);
+            std::cin>>num;
+            board[num] = 1;
         }
         else if (command == "remove")
         {
-            std::cin>>M;
-            board.erase(M);
+            std::cin>>num;
+            board[num] = 0;
         }
         else if (command == "check")
         {
-            std::cin>>M;
-            if (board.find(M) != board.end())
-            {
-                std::cout<<1<<"\n";
-            }
-            else
-            {
-                std::cout<<0<<"\n";
-            }
+            std::cin>>num;
+            std::cout<<board[num]<<"\n";
         }
         else if (command == "toggle")
         {
-            std::cin>>M;
-            auto it = board.find(M);
-            if (it != board.end())
-            {
-                board.erase(it);
-            }
-            else
-            {
-                board.insert(M);
-            }
+            std::cin>>num;
+            board[num] = !board[num];
         }
         else if (command == "all")
         {
-            for (int i = 1; i < 21; ++i)
+            for (int j = 1; j < 21; ++j)
             {
-                board.insert(i);
+                board[j] = 1;
             }
         }
         else if (command == "empty")
         {
-            board.clear();
+            for (int j = 1; j < 21; ++j)
+            {
+                board[j] = 0;
+            }
         }
     }
 }
