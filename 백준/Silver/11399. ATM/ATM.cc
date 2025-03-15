@@ -1,29 +1,19 @@
-#include<iostream>
-#include<algorithm>
-#include<vector>
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
-int main()
-{
-    int n = 0;
-    std::vector<int> times;
+int main() {
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    int N, sum = 0, res = 0;
+    std::cin >> N;
+    std::vector<int> v(N);
     
-    std::cin >> n;
-    for(int i = 0; i < n; ++i)
-    {
-        int time = 0;
-        std::cin >> time;
-        times.push_back(time);
-    }
+    for (int &x : v) std::cin >> x;
+    std::sort(v.begin(), v.end());
     
-    std::sort(times.begin(), times.end());
-    int totalTime = 0;
-    int answer = 0;
-    for(int i = 0; i < times.size(); ++i)
-    {
-        totalTime = times[i] + totalTime;
-        answer += totalTime;
-    }
+    for (int x : v) res += (sum += x);
     
-    std::cout << answer;
-    return 0;
+    std::cout << res;
 }
