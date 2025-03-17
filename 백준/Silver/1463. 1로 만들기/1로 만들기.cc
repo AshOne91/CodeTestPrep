@@ -1,29 +1,19 @@
 #include <iostream>
 #include <algorithm>
-using namespace std;
 
 int DP[1000000];
 
 int main() {
-	int N;
-	cin >> N;
+    int N;
+    std::cin >> N;
+    DP[1] = 0;
 
-	for (int i = 2; i <= N; i++) {
-		// 1. 1을 뺀다.
-		DP[i] = DP[i - 1] + 1;
+    for (int i = 2; i <= N; i++) {
+        DP[i] = DP[i - 1] + 1;
+        if (i % 2 == 0) DP[i] = std::min(DP[i], DP[i / 2] + 1);
+        if (i % 3 == 0) DP[i] = std::min(DP[i], DP[i / 3] + 1);
+    }
 
-		// 2. 2로 나누어지면
-		if (i % 2 == 0) {
-			DP[i] = min(DP[i], DP[i / 2] + 1);
-		}
-
-		// 3. 3으로 나누어지면
-		if (i % 3 == 0) {
-			DP[i] = min(DP[i], DP[i / 3] + 1);
-		}
-	}
-
-	cout << DP[N];
-
-	return 0;
+    std::cout << DP[N];
+    return 0;
 }
