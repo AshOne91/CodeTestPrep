@@ -1,26 +1,20 @@
-#include<iostream>
-#include<vector>
-std::vector<int> dpMap(12, 0);
-
+#include <iostream>
+#include <vector>
+// 이거 답지봄
+std::vector<int> sumDP(12, 0);
 int main()
 {
-    int T;
-    std::cin>>T;
-
-    dpMap[1] = 1;
-    dpMap[2] = 2;
-    dpMap[3] = 4;
-    
-    for(int i = 4; i < 11; ++i)
+    sumDP[1] = 1;
+    sumDP[2] = 2;
+    sumDP[3] = 4;
+    for (int i = 4; i < 11; ++i)
+        sumDP[i] = sumDP[i - 3] + sumDP[i - 2] + sumDP[i - 1];
+    int n;
+    std::cin>>n;
+    for (int i = 0; i < n; ++i)
     {
-        dpMap[i] = dpMap[i - 1] + dpMap[i - 2] + dpMap[i - 3];
+        int t;
+        std::cin>>t;
+        std::cout<<sumDP[t]<<'\n';
     }
-    
-    for (int i = 0; i < T; ++i)
-    {
-        int n;
-        std::cin>>n;
-        std::cout<<dpMap[n]<<std::endl;
-    }
-    return 0;
 }
