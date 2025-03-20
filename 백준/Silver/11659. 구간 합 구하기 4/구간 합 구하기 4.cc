@@ -1,29 +1,30 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
 
 int main()
 {
-    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
-    std::cin.tie(NULL);                // 입출력 묶음 해제
-    std::cout.tie(NULL);                // 입출력 묶음 해제
-
+    std::ios_base::sync_with_stdio(false);
+    std::cout.tie(NULL);
+    std::cin.tie(NULL);
+    
     int N, M;
     std::cin>>N>>M;
     
-    std::vector<int> numList(N + 1, 0);
-    for(int i = 1; i <= N; ++i)
+    std::vector<int> sum(N + 1, 0);
+    for (int i = 1; i <= N; ++i)
     {
-        int num;
-        std::cin>>num;
-        numList[i] = numList[i-1] + num;
+        std::cin>>sum[i];
     }
     
-    for(int k = 0; k < M; ++k)
+    for (int i = 1; i <= N - 1; ++i)
     {
-        int i, j;
-        std::cin>>i>>j;
-        int sum = numList[j] - numList[i - 1];
-        std::cout<<sum<<"\n";
+        sum[i + 1] = sum[i] + sum[i + 1];
     }
-    return 0;
+    
+    for (int i = 0; i < M; ++i)
+    {
+        int start, end;
+        std::cin>>start>>end;
+        std::cout<<sum[end] - sum[start - 1]<<'\n';
+    }
 }
