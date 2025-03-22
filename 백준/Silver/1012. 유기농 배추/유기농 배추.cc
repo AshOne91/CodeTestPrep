@@ -1,73 +1,65 @@
-#include<iostream>
-#include<vector>
-#include<stack>
-using namespace std;
+#include <iostream>
+#include <vector>
+#include <stack>
 
-vector<pair<int, int>> dir = 
-{/*상*/{-1, 0},/*하*/{1, 0},/*좌*/{0, -1},/*우*/{0, 1}};
+std::vector<std::pair<int, int>> dir{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
 int main()
 {
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
+
     int T;
-    std::cin>>T;
-    
-    //가로, 세로, 배추가 심어져 있는 위치의 개수
-    
+    std::cin >> T;
+
     for (int i = 0; i < T; ++i)
     {
         int M, N, K;
-        std::cin>>M>>N>>K;
-    
-        vector<vector<int>> map(N, vector<int>(M, 0));
-    
-        for(int i = 0; i < K; ++i)
+        std::cin >> M >> N >> K;
+        std::vector<std::vector<int>> map(N, std::vector<int>(M, 0));
+        int count = 0;
+        std::stack<std::pair<int, int>> st;
+
+        for (int j = 0; j < K; ++j)
         {
             int X, Y;
-            std::cin>>X>>Y;
+            std::cin >> X >> Y;
             map[Y][X] = 1;
         }
-        
-        int count = 0;  
+
         for (int y = 0; y < N; ++y)
         {
             for (int x = 0; x < M; ++x)
             {
-                if (map[y][x] != 1)
+                if (map[y][x] == 0)
                 {
                     continue;
                 }
-                
-                stack<pair<int, int>> st;
-                ++count;
                 st.push({y, x});
                 map[y][x] = 0;
-                
-                while(!st.empty())
+                count++;
+
+                while (!st.empty())
                 {
-                    auto pair = st.top();
+                    auto pos = st.top();
                     st.pop();
-                    int currentY = pair.first;
-                    int currentX = pair.second;
                     
-                    for(auto& pair : dir)
+                    for (auto& d : dir)
                     {
-                        int nextY = pair.first + currentY;
-                        int nextX = pair.second + currentX;
-                    
-                        if (nextY < 0 || map.size() <= nextY || nextX < 0 || map[0].size() <= nextX)
+                        int ny = pos.first + d.first;
+                        int nx = pos.second + d.second;
+
+                        if (ny >= 0 && ny < N && nx >= 0 && nx < M && map[ny][nx] == 1)
                         {
-                            continue;
+                            st.push({ny, nx});
+                            map[ny][nx] = 0;
                         }
-                    
-                        if (map[nextY][nextX] == 0)
-                        {
-                            continue;
-                        }
-                        map[nextY][nextX] = 0;
-                        st.push({nextY, nextX});
                     }
                 }
             }
         }
-        std::cout<<count<<std::endl;
+
+        std::cout << count << "\n";
     }
 }
