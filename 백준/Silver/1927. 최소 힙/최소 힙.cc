@@ -1,38 +1,34 @@
-#include<iostream>
-#include<functional>
-#include<queue>
+#include <iostream>
+#include <queue>
 
 int main()
 {
-    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
-    std::cin.tie(NULL);                // 입출력 묶음 해제
-    std::cout.tie(NULL);                // 입출력 묶음 해제
-
-    auto cmp = [](long long lhs, long long rhs){ return lhs > rhs;};
-    std::priority_queue<long long, std::vector<long long>, decltype(cmp)> pq(cmp);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
     
     int N;
     std::cin>>N;
-    for(int i = 0; i < N; ++i)
+    auto cmp = [](int& left, int& right)
     {
-        long long num;
-        std::cin>>num;
-        if (num == 0)
+          return left > right;  
+    };
+    std::priority_queue<int, std::vector<int>, decltype(cmp)> pq(cmp);
+    for (int i = 0; i < N; ++i)
+    {
+        int x;
+        std::cin>>x;
+        if (x == 0)
         {
             if (pq.empty())
             {
-                std::cout<<0<<"\n";
+                std::cout<<0<<'\n';
+                continue;
             }
-            else
-            {
-                std::cout<<pq.top()<<"\n";
-                pq.pop();
-            }
+            std::cout<<pq.top()<<'\n';
+            pq.pop();
+            continue;
         }
-        else
-        {
-            pq.push(num);
-        }
+        pq.push(x);
     }
-    return 0;
 }
