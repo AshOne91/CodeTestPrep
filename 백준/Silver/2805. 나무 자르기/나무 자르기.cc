@@ -1,39 +1,51 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <iostream>
+#include <vector>
+#include <algorithm>  
 
-int main(){
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
-    
-    long long n, m, max = 0;
-    int tree[1000001];
-    
-    cin >> n >> m;
-    for(int i = 0; i < n; i++) cin >> tree[i];
-    
-    sort(tree, tree + n);
-    
-    long long low = 0;
-    long long high = tree[n - 1];
-    
-    while(low <= high){ //cut 가능할 때 까지
-        long long sum = 0;
-        long long cut = (low + high) / 2;
-        
-        for(int i = 0; i < n; i++) {
-            if(tree[i] - cut > 0) sum += tree[i] - cut; // cut 하고 남는 게 있다면 가져감
+// 답지봄
+int main()
+{
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
+
+    int N, M;
+    std::cin >> N >> M;
+
+    std::vector<int> tree(N);
+    int low = 0, high = 0;
+
+    for (int i = 0; i < N; ++i)
+    {
+        std::cin >> tree[i];
+        high = std::max(high, tree[i]);
+    }
+
+    int result = 0;  
+
+    while (low <= high) 
+    {
+        int mid = (low + high) / 2;
+        long long total = 0; 
+
+        for (int i = 0; i < N; ++i)
+        {
+            if (tree[i] > mid)
+            {
+                total += (tree[i] - mid);
+            }
         }
-        
-        if(sum >= m){ // m미터보다 가져간 나무가 같거나 많으면
-            max = cut; // 현재 cut 지점을 최대 지점으로 저장
-            low = cut + 1; // cut 가능 구간을 더 올림
-        } else{
-            high = cut - 1; // m미터가 안 되면 cut 가능 구간을 내림
+
+        if (total >= M)
+        {
+            result = mid;   
+            low = mid + 1; 
+        }
+        else 
+        {
+            high = mid - 1;  
         }
     }
-    
-    cout << max; // 최대 cut 지점 출력
-    
-    return 0;
+
+    std::cout << result;
 }
