@@ -1,34 +1,38 @@
-#include <algorithm>
+//❓좌표 압축이란
+// 수의 범위가 매우 큰 상태에서 수의 값과 
+// 상관 없이 숫자 간의 대소관계만 알면 될 때 이용하는 알고리즘이다.
+
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <unordered_set>
 
-using namespace std;
-
+// 아니 좌표압축이 뭐인지 알려줘야 될거 아니야
 int main()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-
-    int n;
-    cin >> n;
-    vector<int> v(n); //원본 벡터
-    // 입력
-    for (int i = 0; i < n; i++)
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
+    
+    int N;
+    std::cin>>N;
+    std::vector<int> value(N);
+    std::vector<int> pos(N);
+    for (int i = 0; i < N; ++i)
     {
-        cin >> v[i];
+        int num;
+        std::cin>>num;
+        value[i] = num;
+        pos[i] = num;
     }
-    vector<int> cv(v); // 원본 벡터를 복사하여 중복 된 수를 제거하고 정렬을 시행 할 벡터.
-    sort(cv.begin(), cv.end()); //오름차순 정렬
-    // 중복 제거
-    cv.erase(unique(cv.begin(), cv.end()), cv.end());
-    for (int i = 0; i < n; i++)
+    
+    std::sort(value.begin(), value.end());/*오름차순*/
+    value.erase(std::unique(value.begin(), value.end()), value.end());
+    
+    std::vector<int> result;
+    for (int p : pos)
     {
-        // i번째 요소값의 위치 it
-        auto it = lower_bound(cv.begin(), cv.end(), v[i]);
-        // it에서 cv벡터의 시작 주소값을 빼준 값이 답
-        cout << it - cv.begin() << ' ';
-    }
-
-    return 0;
+        auto it = std::lower_bound(value.begin(), value.end(), p);
+        std::cout<<it - value.begin()<<' ';
+    } 
 }
