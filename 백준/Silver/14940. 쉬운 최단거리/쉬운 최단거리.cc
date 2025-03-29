@@ -1,70 +1,72 @@
-#include<iostream>
-#include<vector>
-#include<queue>
+// 0은 갈 수 없는 땅 1은 갈 수 있는 땅 2는 목표 지점
+// 원래 갈 수 있는 땅인 부분 중에서 도달할 수 없는 위치는 -1
+#include <iostream>
+#include <vector>
+#include <queue>
 
-std::vector<std::pair<int, int>> dir = {{-1, 0},{0, 1},{1, 0},{0, -1}};
+std::vector<std::pair<int,int>> dirs{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 int main()
 {
-    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
-    std::cin.tie(NULL);                // 입출력 묶음 해제
-    std::cout.tie(NULL);                // 입출력 묶음 해제
-
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
+    
     int n, m;
     std::cin>>n>>m;
-    
-    std::vector<std::vector<int>> map(n, std::vector<int>(m, 0));
-    std::vector<std::vector<int>> dist(n, std::vector<int>(m, -1));
-    int startY = -1;
-    int startX = -1;
-    for (int i = 0; i < n; ++i)
+    std::vector<std::vector<int>> map(n, std::vector<int>(m, -1));
+    int startY, startX;
+    for (int y = 0; y < n; ++y)
     {
-        for (int j = 0; j < m; ++j)
+        for (int x = 0; x < m; ++x)
         {
-            std::cin>>map[i][j];
-            if (map[i][j] == 0)
+            int num;
+            std::cin>>num;
+            if (num == 2)
             {
-                dist[i][j] = 0;
+                startY = y;
+                startX = x;
+                map[startY][startX] = 0;
             }
-            else if (map[i][j] == 2)
+            if (num == 0)
             {
-                startY = i;
-                startX = j;
+                map[y][x] = 0;
             }
         }
     }
     
-    std::queue<std::pair<int, int>> qu;
+    std::queue<std::pair<int/*y*/, int/*x*/>> qu;
     qu.push({startY, startX});
-    dist[startY][startX] = 0;
     
     while(!qu.empty())
     {
-        auto curPos = qu.front();
+        auto pos = qu.front();
         qu.pop();
         
-        for (auto& pos : dir)
+        for (auto& dir : dirs)
         {
-            int nextY = pos.first + curPos.first;
-            int nextX = pos.second + curPos.second;
+            int nextY = pos.first + dir.first;
+            int nextX = pos.second + dir.second;
+            if (nextX < 0 || m <= nextX)
+                continue;
+            if (nextY < 0 || n <= nextY)
+                continue;
             
-            if (nextY < 0 || nextY >= n || nextX < 0 || nextX >= m || map[nextY][nextX] != 1)
+            if (map[nextY][nextX] != -1)
             {
-                continue;        
+                continue;
             }
-            
+            map[nextY][nextX] = map[pos.first][pos.second] + 1;
             qu.push({nextY, nextX});
-            map[nextY][nextX] = 2;
-            dist[nextY][nextX] = dist[curPos.first][curPos.second] + 1;
         }
     }
     
-    for (int i = 0; i < n ; ++i)
+    for (int y = 0; y < n; ++y)
     {
-        for (int j = 0; j < m; ++j)
+        for (int x = 0; x < m; ++x)
         {
-            std::cout<<dist[i][j]<<" ";
+            std::cout<<map[y][x]<<' ';
         }
-        std::cout<<"\n";
+        std::cout<<'\n';
     }
 }
