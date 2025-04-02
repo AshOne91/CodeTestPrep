@@ -1,22 +1,20 @@
 #include <iostream>
 
-int N, M, comb[8];
-
-void bt(int idx, int cnt) {
-    if (cnt == M) {
-        for (int i = 0; i < M; ++i) std::cout << comb[i] << ' ';
+int N, M;
+void backtrack(int s, int d, int* r) {
+    if (d == M) {
+        for (int i = 0; i < M; i++) std::cout << r[i] << ' ';
         std::cout << '\n';
         return;
     }
-    for (int i = idx; i <= N; ++i) {
-        comb[cnt] = i;
-        bt(i + 1, cnt + 1);
+    for (int i = s; i <= N; i++) {
+        r[d] = i;
+        backtrack(i + 1, d + 1, r);
     }
 }
 
 int main() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(0);
     std::cin >> N >> M;
-    bt(1, 0);
+    int r[8] = {}; // M <= 8 가정
+    backtrack(1, 0, r);
 }
