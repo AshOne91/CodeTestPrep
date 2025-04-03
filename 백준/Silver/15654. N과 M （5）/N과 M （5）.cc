@@ -2,53 +2,54 @@
 #include <vector>
 #include <algorithm>
 
-int N, M;
-std::vector<int> values;
-std::vector<bool> visited;
 
-void backtracking(std::vector<int>& result)
+int N, M;
+std::vector<bool> visited(10001, false);
+void back_traking(std::vector<int>& nums
+, std::vector<int>& results)
 {
-    // 길이가 M인 수열을 완성하면 출력
-    if (static_cast<int>(result.size()) == M)
+    if (static_cast<int>(results.size()) == M)
     {
-        for (size_t i = 0; i < result.size(); ++i)
+        for (auto value : results)
         {
-            if (i > 0) std::cout << " ";
-            std::cout << result[i];
+            std::cout<<value<<' ';
         }
-        std::cout << "\n";
+        std::cout<<'\n';
         return;
     }
-
-    // 순열 생성
-    for (int i = 0; i < N; ++i)
+    
+    if (static_cast<int>(results.size()) > M)
     {
-        if (!visited[i]) // 이미 사용한 값은 제외
-        {
-            visited[i] = true;          // 방문 표시
-            result.push_back(values[i]); // 값 추가
-            backtracking(result);       // 다음 단계 진행
-            result.pop_back();          // 백트래킹
-            visited[i] = false;         // 방문 해제
-        }
+        return;
+    }
+    
+    for (int i = 0; i < static_cast<int>(nums.size()); ++i)
+    {
+        if (visited[nums[i]] == true)
+            continue;
+        visited[nums[i]] = true;
+        results.push_back(nums[i]);
+        back_traking(nums, results);
+        results.pop_back();
+        visited[nums[i]] = false;
     }
 }
 
 int main()
 {
-    std::cin >> N >> M;
-    values.resize(N);
-    visited.resize(N, false);
-
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
+    
+    std::cin>>N>>M;
+    std::vector<int> nums(N);
     for (int i = 0; i < N; ++i)
     {
-        std::cin >> values[i];
+        std::cin>>nums[i];
     }
-
-    std::sort(values.begin(), values.end()); // 사전 순 정렬
-
-    std::vector<int> result;
-    backtracking(result); // 백트래킹 시작
-
-    return 0;
+    
+    std::sort(nums.begin(), nums.end());
+    
+    std::vector<int> results;
+    back_traking(nums, results);
 }
