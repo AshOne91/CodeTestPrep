@@ -1,23 +1,15 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+using namespace std;
 
-int main()
-{
-    int N;
-    std::cin >> N;
-
-    std::vector<int> lis; // LIS를 저장하는 배열
-    for (int i = 0; i < N; ++i)
-    {
-        int x;
-        std::cin >> x;
-        auto it = std::lower_bound(lis.begin(), lis.end(), x);
-        if (it == lis.end())
-            lis.push_back(x);
-        else
-            *it = x;
-    }
-
-    std::cout << lis.size();
+int main() {
+    int n, res = 1;
+    cin >> n;
+    vector<int> v(n), dp(n, 1);
+    for (int i = 0; i < n; ++i) cin >> v[i];
+    for (int i = 1; i < n; ++i)
+        for (int j = 0; j < i; ++j)
+            if (v[i] > v[j]) dp[i] = max(dp[i], dp[j] + 1);
+    for (int i = 0; i < n; ++i) res = max(res, dp[i]);
+    cout << res;
 }
