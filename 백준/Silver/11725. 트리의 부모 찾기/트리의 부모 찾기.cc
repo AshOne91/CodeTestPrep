@@ -1,37 +1,55 @@
-#include <cstdio>
-#include <vector>
-#include <cstring>
-using namespace std;
+#include <stdio.h>
 
-const int MAX = 100000;
-int head[MAX + 1], to[MAX * 2], nextEdge[MAX * 2], parents[MAX + 1];
-int edgeCount = 0;
+#define MAX_N 100001
+#define MAX_E 200000
 
-// 메모리를 덜 쓰는 그래프 연결 방식 (Adjacency List 직접 구현)
+int head[MAX_N], to[MAX_E], nextEdge[MAX_E];
+int parent[MAX_N], stack[MAX_N];
+char outBuf[MAX_N * 6]; // 출력 버퍼 (최대 6자리 + 개행)
+int edgeCount = 0, outLen = 0;
+
 void addEdge(int u, int v) {
     to[edgeCount] = v;
     nextEdge[edgeCount] = head[u];
     head[u] = edgeCount++;
 }
 
-void dfs(int node) {
-    for (int edge = head[node]; edge != -1; edge = nextEdge[edge]) {
-        int neighbor = to[edge];
-        if (parents[neighbor] == 0) { // 아직 방문하지 않음
-            parents[neighbor] = node;
-            dfs(neighbor);
+void dfs_iterative(int start) {
+    int top = 0;
+    stack[top++] = start;
+    parent[start] = 1;
+
+    while (top) {
+        int node = stack[--top];
+
+        for (int e = head[node]; e != -1; e = nextEdge[e]) {
+            int neighbor = to[e];
+            if (parent[neighbor] == 0) {
+                parent[neighbor] = node;
+                stack[top++] = neighbor;
+            }
         }
     }
+}
+
+void fastPrintInt(int x) {
+    char buf[6];
+    int len = 0;
+    while (x) {
+        buf[len++] = '0' + (x % 10);
+        x /= 10;
+    }
+    while (len--) outBuf[outLen++] = buf[len];
+    outBuf[outLen++] = '\n';
 }
 
 int main() {
     int n;
     scanf("%d", &n);
 
-    // 초기화
-    memset(head, -1, sizeof(head));
+    for (int i = 1; i <= n; ++i)
+        head[i] = -1;
 
-    // 입력 처리 및 간선 추가
     for (int i = 0; i < n - 1; ++i) {
         int a, b;
         scanf("%d %d", &a, &b);
@@ -39,14 +57,11 @@ int main() {
         addEdge(b, a);
     }
 
-    // DFS로 부모 찾기
-    parents[1] = 1; // 루트 노드 설정
-    dfs(1);
+    dfs_iterative(1);
 
-    // 결과 출력
-    for (int i = 2; i <= n; ++i) {
-        printf("%d\n", parents[i]);
-    }
+    for (int i = 2; i <= n; ++i)
+        fastPrintInt(parent[i]);
 
+    fwrite(outBuf, 1, outLen, stdout);
     return 0;
 }
