@@ -1,47 +1,32 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int N, M;
-vector<int> values;
-vector<int> sequence;  // 현재 선택한 수열
-vector<bool> visited;  // 방문 여부를 동적으로 관리
+int N, M, a[8];
+bool v[8];
+vector<int> r;
 
-void backtracking(int depth) {
-    if (depth == M) {  // 수열 길이가 M이면 출력
-        for (int num : sequence) {
-            cout << num << " ";
-        }
-        cout << "\n";
+void dfs() {
+    if ((int)r.size() == M) {
+        for (int x : r) cout << x << ' ';
+        cout << '\n';
         return;
     }
-
-    int prev = -1; // 이전에 사용한 숫자 기록 (중복 방지)
-    for (int i = 0; i < N; i++) {
-        if (!visited[i] && values[i] != prev) {
-            visited[i] = true;
-            sequence.push_back(values[i]);
-            backtracking(depth + 1);
-            sequence.pop_back();
-            visited[i] = false;
-            prev = values[i]; // 이전 값 갱신
-        }
+    int last = -1;
+    for (int i = 0; i < N; ++i) {
+        if (v[i] || a[i] == last) continue;
+        v[i] = true;
+        r.push_back(last = a[i]);
+        dfs();
+        v[i] = false;
+        r.pop_back();
     }
 }
 
 int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
     cin >> N >> M;
-    values.resize(N);
-    visited.resize(N, false);  // 방문 여부 동적 초기화
-
-    for (int i = 0; i < N; i++) {
-        cin >> values[i];
-    }
-
-    sort(values.begin(), values.end());  // 사전순 정렬
-    backtracking(0);
-
-    return 0;
+    for (int i = 0; i < N; ++i) cin >> a[i];
+    sort(a, a + N);
+    dfs();
 }
