@@ -1,77 +1,75 @@
 #include <iostream>
-#include <queue>
 #include <vector>
+#include <queue>
 #include <limits>
 
 const int INF = std::numeric_limits<int>::max();
-int V, E;
 
-void dijkstra(int start, const std::vector<std::vector<std::pair<int, int>>>& graphs)
+int main()
 {
-    std::vector<int> dist(V + 1, INF);
-    auto cmp = [](std::pair<int, int>& left, std::pair<int, int>& right)
-    {
-        return left.second > right.second;  
-    };
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
     
+    int V, E;
+    std::cin>>V>>E;
+    int K;
+    std::cin>>K;
+    
+    auto cmp = [](const std::pair<int, int>& left
+                 , const std::pair<int, int>& right)
+    {
+        return left.second > right.second;
+    };
     std::priority_queue<std::pair<int, int>
         , std::vector<std::pair<int, int>>
         , decltype(cmp)> pq(cmp);
+    std::vector<std::vector<std::pair<int,int>>> graph(V + 1);
+    std::vector<int> distance(V + 1, INF);
     
-    pq.push({start, 0});
-    dist[start] = 0;
+    for (int i = 0; i < E; ++i)
+    {
+        int from, to, cost;
+        std::cin>>from>>to>>cost;
+        graph[from].push_back({to, cost});
+    }
     
-    while (!pq.empty())
+    pq.push({K, 0});
+    distance[K] = 0;
+    
+    while(!pq.empty())
     {
         auto current = pq.top();
+        auto current_node = current.first;
+        auto current_cost = current.second;
         pq.pop();
         
-        int currentNode = current.first;
-        int currentDist = current.second;
-        
-        if (currentDist > dist[currentNode])
+        if (current_cost > distance[current_node])
         {
             continue;
         }
         
-        for (const auto& [nextNode, nextWeight] : graphs[currentNode])
+        for (auto& next : graph[current_node])
         {
-            if (dist[nextNode] > nextWeight + currentDist)
+            int next_node = next.first;
+            int next_cost = next.second;
+            if (distance[next_node] >  distance[current_node] + next_cost)
             {
-                dist[nextNode] = nextWeight + currentDist;
-                pq.push({nextNode, dist[nextNode]});
+                distance[next_node] = distance[current_node] + next_cost;
+                pq.push({next_node, distance[next_node]});
             }
         }
     }
     
-    // 모든 노드까지의 최단 거리 출력
     for (int i = 1; i <= V; ++i)
     {
-        if (dist[i] == INF)
-            std::cout << "INF\n";
+        if (distance[i] == INF)
+        {
+            std::cout<<"INF\n";
+        }
         else
-            std::cout << dist[i] << '\n';
+        {
+            std::cout<<distance[i]<<'\n';
+        }
     }
-}
-
-int main()
-{
-    std::ios::sync_with_stdio(false);
-    std::cout.tie(nullptr);
-    std::cin.tie(nullptr);
-    
-    std::cin >> V >> E;
-    int K;
-    std::cin >> K;
-    
-    // graphs는 각 노드의 인접 리스트를 저장
-    std::vector<std::vector<std::pair<int, int>>> graphs(V + 1);
-    for (int i = 0; i < E; ++i)
-    {
-        int u, v, w;
-        std::cin >> u >> v >> w;
-        graphs[u].push_back({v, w});
-    }
-    
-    dijkstra(K, graphs);
 }
