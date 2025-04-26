@@ -1,56 +1,78 @@
 #include <iostream>
 #include <vector>
-#include <cstring>
+#include <queue>
 
-const int MAX = 10001; // 최대 노드 수
-std::vector<std::pair<int, int>> graph[MAX];
-bool visited[MAX];
-int max_dist = 0;
-int farthest_node = 0;
-
-// DFS 함수: 현재 노드와 거리 합계를 입력받아 탐색
-void dfs(int node, int dist) {
-    visited[node] = true;
-
-    if (dist > max_dist) {
-        max_dist = dist;
-        farthest_node = node;
+int main()
+{
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
+    
+    int n;
+    std::cin>>n;
+    std::vector<std::vector<std::pair<int, int>>> graphs(n + 1);
+    std::vector<int> distance(n + 1, 0);
+    std::vector<bool> visited(n + 1, false);
+    
+    int from, to, cost;
+    while(std::cin>>from>>to>>cost)
+    {
+        graphs[from].push_back({to, cost});
+        graphs[to].push_back({from, cost});
     }
-
-    for (auto &edge : graph[node]) {
-        int next_node = edge.first;
-        int weight = edge.second;
-        if (!visited[next_node]) {
-            dfs(next_node, dist + weight);
+    
+    std::queue<int> qu;
+    qu.push(1);
+    visited[1] = true;
+    distance[1] = 0;
+    int max_node = 1;
+    int max_distance = -1;
+    while(!qu.empty())
+    {
+        int current_node = qu.front();
+        qu.pop();
+        if (distance[current_node] > max_distance)
+        {
+            max_distance = distance[current_node];
+            max_node = current_node;
+        }
+        for(auto next_node : graphs[current_node])
+        {
+            if (visited[next_node.first] == true)
+            {
+                continue;
+            }
+            visited[next_node.first] = true;
+            distance[next_node.first] = distance[current_node] + next_node.second;
+            qu.push(next_node.first);
         }
     }
-}
-
-int main() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-
-    int n;
-    std::cin >> n;
-
-    for (int i = 0; i < n - 1; ++i) {
-        int parent, child, weight;
-        std::cin >> parent >> child >> weight;
-        graph[parent].emplace_back(child, weight);
-        graph[child].emplace_back(parent, weight);
+    
+    std::fill(distance.begin(), distance.end(), 0);
+    std::fill(visited.begin(), visited.end(), false);
+    qu.push(max_node);
+    visited[max_node] = true;
+    distance[max_node] = 0;
+    int result = -1;
+    while(!qu.empty())
+    {
+        int current_node = qu.front();
+        qu.pop();
+        if (distance[current_node] > result)
+        {
+            result = distance[current_node];
+        }
+        for(auto next_node : graphs[current_node])
+        {
+            if (visited[next_node.first] == true)
+            {
+                continue;
+            }
+            visited[next_node.first] = true;
+            distance[next_node.first] = distance[current_node] + next_node.second;
+            qu.push(next_node.first);
+        }
     }
-
-    // 1. 루트에서 가장 먼 노드(A)를 찾기 위한 첫 번째 DFS
-    memset(visited, false, sizeof(visited));
-    dfs(1, 0);
-
-    // 2. A에서 가장 먼 노드(B)를 찾기 위한 두 번째 DFS
-    memset(visited, false, sizeof(visited));
-    max_dist = 0;
-    dfs(farthest_node, 0);
-
-    // 트리의 지름 출력
-    std::cout << max_dist << '\n';
-
-    return 0;
+    
+    std::cout<<result;
 }
