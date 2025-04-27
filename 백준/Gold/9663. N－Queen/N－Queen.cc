@@ -1,14 +1,14 @@
-#include<iostream>
-#include<vector>
-int N;
-int total;
-std::vector<int> board(16, -1);
+#include <iostream>
+#include <vector>
 
-bool check(int level)
+int total = 0;
+
+bool isSafe(int x, int y, const std::vector<int>& board)
 {
-    for (int i = 0; i < level; ++i)
+    for (int i = 0; i < x; ++i)
     {
-        if (board[i] == board[level] || abs(board[level] - board[i]) == level - i)
+        // Same column or diagonal
+        if (board[i] == y || std::abs(board[i] - y) == std::abs(i - x))
         {
             return false;
         }
@@ -16,31 +16,33 @@ bool check(int level)
     return true;
 }
 
-void NQueen(int x)
+void NQueen(int x, int N, std::vector<int>& board)
 {
     if (x == N)
     {
-        total++;
+        ++total;
+        return;
     }
-    else
+    
+    for (int i = 0; i < N; ++i)
     {
-        for (int i = 0; i < N; ++i)
+        if (isSafe(x, i, board))
         {
             board[x] = i;
-            if (check(x))
-            {
-                NQueen(x + 1);
-            }
+            NQueen(x + 1, N, board); 
         }
     }
 }
+
 int main()
 {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-    std::cout.tie(nullptr);
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
     
-    std::cin>>N;
-    NQueen(0);
-    std::cout<<total;
+    int N;
+    std::cin >> N;
+    std::vector<int> board(N, 0);
+    NQueen(0, N, board);
+    std::cout << total;
 }
