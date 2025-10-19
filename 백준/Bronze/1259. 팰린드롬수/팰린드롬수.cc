@@ -1,27 +1,19 @@
-#include<iostream>
-#include<algorithm>
-#include<string>
+#include <bits/stdc++.h>
+using namespace std;
 
-int main()
-{
-    while(true)
-    {
-        std::string num;
-        std::cin>>num;
-        if (num == "0")
-        {
-            return 0;
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    string s;
+    while (cin >> s && s != "0") {
+        bool is_pal = true;
+        size_t l = 0, r = s.size() - 1;
+        while (l < r) {
+            if (s[l] != s[r]) { is_pal = false; break; }
+            ++l; --r;
         }
-        std::string reverseNum = num;
-        std::reverse(reverseNum.begin(), reverseNum.end());
-        if (num == reverseNum)
-        {
-            std::cout<<"yes"<<std::endl;
-        }
-        else
-        {
-            std::cout<<"no"<<std::endl;
-        }
-    } 
+        cout << (is_pal ? "yes" : "no") << '\n';
+    }
     return 0;
 }
