@@ -1,30 +1,32 @@
-#include<iostream>
-#include<string>
-#include<vector>
-#include<algorithm>
+#include <iostream>
+#include <algorithm>
+#include <string>
 
 int main()
 {
-    std::vector<std::string> words;
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    std::cout.tie(nullptr);
+
     int N;
     std::cin>>N;
-    for(int i = 0; i < N; ++i)
+    std::vector<std::string> results(N);
+    for (int i = 0; i < N; ++i)
     {
-        std::string word;
-        std::cin>>word;
-        words.push_back(word);
+        std::cin>>results[i];
     }
-    
-    std::sort(words.begin(), words.end(), [](auto& lhs, auto& rhs){
+
+    std::sort(results.begin(), results.end(), [](auto& lhs, auto& rhs){
         if (lhs.size() == rhs.size())
         {
             return lhs < rhs;
         }
         return lhs.size() < rhs.size();
     });
-    words.erase(std::unique(words.begin(), words.end()), words.end());
+
+    results.erase(std::unique(results.begin(), results.end()), results.end());
     
-    for(auto& str : words)
+    for(auto& str : results)
     {
         std::cout<<str<<std::endl;
     }
