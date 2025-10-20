@@ -1,55 +1,44 @@
 #include <iostream>
-#include <vector>
 #include <string>
+using namespace std;
 
-std::vector<int> board(21, 0);
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-int main()
-{
-    std::ios_base::sync_with_stdio(false);;
-    std::cin.tie(NULL);
-    std::cout.tie(NULL);
-    
     int M;
-    std::cin>>M;
-    for (int i = 0; i < M; ++i)
-    {
-        std::string command;
-        int num;
-        std::cin>>command;
-        if (command == "add")
-        {
-            std::cin>>num;
-            board[num] = 1;
-        }
-        else if (command == "remove")
-        {
-            std::cin>>num;
-            board[num] = 0;
-        }
-        else if (command == "check")
-        {
-            std::cin>>num;
-            std::cout<<board[num]<<"\n";
-        }
-        else if (command == "toggle")
-        {
-            std::cin>>num;
-            board[num] = !board[num];
-        }
-        else if (command == "all")
-        {
-            for (int j = 1; j < 21; ++j)
-            {
-                board[j] = 1;
+    cin >> M;
+
+    int S = 0;
+
+    while (M--) {
+        string cmd;
+        cin >> cmd;
+
+        if (cmd[0] == 'a') {
+            if (cmd[1] == 'd') {
+                int x;
+                cin >> x;
+                S |= (1 << x);
+            } else {
+                S = (1 << 21) - 1;
             }
-        }
-        else if (command == "empty")
-        {
-            for (int j = 1; j < 21; ++j)
-            {
-                board[j] = 0;
-            }
+        } else if (cmd[0] == 'r') {
+            int x;
+            cin >> x;
+            S &= ~(1 << x);
+        } else if (cmd[0] == 'c') {
+            int x;
+            cin >> x;
+            cout << ((S & (1 << x)) ? 1 : 0) << '\n';
+        } else if (cmd[0] == 't') {
+            int x;
+            cin >> x;
+            S ^= (1 << x);
+        } else {
+            S = 0;
         }
     }
+
+    return 0;
 }
