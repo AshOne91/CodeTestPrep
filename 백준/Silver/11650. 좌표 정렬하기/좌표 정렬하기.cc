@@ -1,36 +1,31 @@
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
 int main()
 {
-    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
-    std::cin.tie(NULL);                // 입출력 묶음 해제
-    std::cout.tie(NULL);
-    
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
     int N;
     std::cin>>N;
-    
-    std::vector<std::pair<int/*x*/, int/*y*/>> sortedPoint;
+    std::vector<std::pair<int, int>> pos(N);
     for (int i = 0; i < N; ++i)
     {
-        int x, y;
-        std::cin>>x>>y;
-        sortedPoint.push_back({x, y});
+        std::cin>>pos[i].first>>pos[i].second;
     }
-    
-    std::sort(sortedPoint.begin(), sortedPoint.end(), [](auto& lhs, auto& rhs){
-        if(lhs.first == rhs.first)
+
+    std::stable_sort(pos.begin(), pos.end(), [](const auto& lhs, const auto& rhs){
+        if (lhs.first != rhs.first)
         {
-            return lhs.second < rhs.second;
+            return lhs.first < rhs.first;
         }
-        return lhs.first < rhs.first;
+        return lhs.second < rhs.second;
     });
-    
-    for(const auto& [x, y]:sortedPoint)
+
+    for(const auto& result : pos)
     {
-        std::cout<<x<<" "<<y<<"\n";
+        std::cout<<result.first<<' '<<result.second<<'\n';
     }
-    
     return 0;
 }
