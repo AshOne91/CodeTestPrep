@@ -1,63 +1,45 @@
-#include<iostream>
-#include<stack>
+#include <iostream>
+#include <stack>
+using namespace std;
 
-int main()
-{
-    std::ios::sync_with_stdio(false);  // 입출력 속도 최적화
-    std::cin.tie(NULL);                // 입출력 묶음 해제
-    std::cout.tie(NULL);                // 입출력 묶음 해제
-
-    std::stack<int> st;
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
     int N;
-    std::cin>>N;
-    int num;
-    for(int i = 0; i < N; ++i)
-    {
-        std::string command;
-        std::cin>>command;
-        if (command == "push")
-        {
-            std::cin>>num;
-            st.push(num);
-        }
-        else if(command == "pop")
-        {
-            if (st.empty())
-            {
-                std::cout<<"-1"<<"\n";
-            }
-            else
-            {
-                std::cout<<st.top()<<"\n";
-                st.pop();
+    cin >> N;
+    stack<int> st;
+    while (N--) {
+        string cmd;
+        cin >> cmd;
+
+        // CASE 1: 'p'로 시작 (push or pop)
+        if (cmd[0] == 'p') {
+            if (cmd[1] == 'u') {  // push
+                int x;
+                cin >> x;
+                st.push(x);
+            } else {
+                if (st.empty()) {
+                    cout << -1 << '\n';
+                } else {
+                    cout << st.top() << '\n';
+                    st.pop();
+                }
             }
         }
-        else if (command == "size")
-        {
-            std::cout<<st.size()<<"\n";
+        // CASE 2: size
+        else if (cmd[0] == 's') {
+            cout << st.size() << '\n';
         }
-        else if (command == "empty")
-        {
-            if (st.empty())
-            {
-                std::cout<<1<<"\n";
-            }
-            else
-            {
-                std::cout<<0<<"\n";
-            }
+        // CASE 3: empty
+        else if (cmd[0] == 'e') {
+            cout << (st.empty() ? 1 : 0) << '\n';
         }
-        else if (command == "top")
-        {
-            if (st.empty())
-            {
-                std::cout<<-1<<"\n";
-            }
-            else
-            {
-                std::cout<<st.top()<<"\n";
-            }
+        // CASE 4: top
+        else {
+            cout << (st.empty() ? -1 : st.top()) << '\n';
         }
     }
+
     return 0;
 }
