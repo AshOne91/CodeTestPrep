@@ -4,7 +4,7 @@ int main()
 {
     int n;
     std::cin>>n;
-    std::vector<int> dp(1001, 0);
+    std::vector<int> dp(1001);
     dp[1] = 1; // 2X1
     dp[2] = 2; // 2X2 
     for (int i = 3 ; i <= n; ++i)
