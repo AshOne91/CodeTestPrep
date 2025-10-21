@@ -1,50 +1,46 @@
 #include <iostream>
-#include <stack>
 #include <vector>
+#include <stack>
 
 int main()
 {
-    std::ios_base::sync_with_stdio(false);
-    std::cout.tie(NULL);
-    std::cin.tie(NULL);
-    
-    int N;
-    std::cin>>N;
-    std::vector<std::vector<int>> graphs(N + 1);
-    std::vector<bool> visited(N + 1, false);
-    
-    int T;
-    std::cin>>T;
-    
-    for (int i = 0; i < T; ++i)
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    int N, E;
+    std::cin>>N>>E;
+    std::vector<std::vector<int>> graph(N+1);
+    std::vector<bool> visited(N+1);
+
+    for (int i = 0; i < E; ++i)
     {
-        int from, to;
-        std::cin>>from>>to;
-        graphs[from].push_back(to);
-        graphs[to].push_back(from);
+        int a, b;
+        std::cin>>a>>b;
+        graph[a].push_back(b);
+        graph[b].push_back(a);
     }
-    
-    int count = 0;
+
     std::stack<int> st;
     st.push(1);
     visited[1] = true;
-    
-    
+
+    int cnt = 0;
     while(!st.empty())
     {
-        int i = st.top();
+        int node = st.top();
         st.pop();
-        
-        for (auto nodeIndex : graphs[i])
+
+        for (const auto& next_node : graph[node])
         {
-            if (visited[nodeIndex] == true)
+            if (visited[next_node] == true)
+            {
                 continue;
-            
-            count++;
-            visited[nodeIndex] = true;
-            st.push(nodeIndex);
+            }
+            st.push(next_node);
+            visited[next_node] = true;
+            cnt++;
         }
     }
-    
-    std::cout<<count<<"\n";
+
+    std::cout<<cnt;
 }
