@@ -10,7 +10,7 @@ int main()
     
     int N, M;
     std::cin>>N>>M;
-    std::vector<int> sum(N + 1, 0);
+    std::vector<int> sum(N + 1);
     for (int i = 1; i <= N; ++i)
     {
         std::cin>>sum[i];
