@@ -1,60 +1,54 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <string>
 #include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <cmath>
 
-int main()
-{
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(NULL);
-    std::cout.tie(NULL);
+using namespace std;
 
-    int N, M; // N: 학생 수, M: 비교 횟수
-    std::cin >> N >> M;
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
-    std::vector<std::vector<int>> adj(N + 1); // 인접 리스트
-    std::vector<int> indegree(N + 1, 0);      // 진입 차수
-
-    // 비교 정보 입력 (A는 B 앞에 서야 함)
+    int N, M;
+    std::cin>>N>>M;
+    std::vector<int> indegress(N + 1, 0);
+    std::vector<std::vector<int>> graphs(N + 1);
     for (int i = 0; i < M; ++i)
     {
-        int A, B;
-        std::cin >> A >> B;
-        adj[A].push_back(B);  // A → B
-        indegree[B]++;        // B의 진입 차수 증가
+        int from, to;
+        std::cin>>from>>to;
+        graphs[from].push_back(to);
+        indegress[to]++;
     }
 
-    std::queue<int> q;
-    std::vector<int> result;
-
-    // 진입 차수가 0인 학생 먼저 줄 세움
+    std::queue<int> qu;
     for (int i = 1; i <= N; ++i)
     {
-        if (indegree[i] == 0)
-            q.push(i);
-    }
-
-    // 위상 정렬 수행
-    while (!q.empty())
-    {
-        int cur = q.front();
-        q.pop();
-        result.push_back(cur); // 줄에 추가
-
-        // 연결된 다음 학생들 진입 차수 감소
-        for (int next : adj[cur])
+        if (indegress[i] == 0)
         {
-            indegree[next]--;
-            if (indegree[next] == 0)
-                q.push(next);
+            qu.push(i);
         }
     }
 
-    // 결과 출력
-    for (int x : result)
+    while(!qu.empty())
     {
-        std::cout << x << ' ';
+        int node = qu.front();
+        qu.pop();
+        std::cout<<node<<' ';
+        for (int next_node : graphs[node])
+        {
+            indegress[next_node]--;
+            if (indegress[next_node] == 0)
+            {
+                qu.push(next_node);
+            }
+        }
     }
-    std::cout << '\n';
 
     return 0;
 }
