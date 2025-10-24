@@ -1,64 +1,58 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <string>
 #include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <cmath>
 #include <limits>
 
+using namespace std;
 const int INF = std::numeric_limits<int>::max();
-
 int main() {
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(NULL);
-    std::cout.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
 
     int N, K;
-    std::cin >> N >> K;
+    std::cin>>N>>K;
+    std::vector<int> dist(100000 + 1, INF);
+    std::deque<int> dq;
 
-    // 거리 배열 초기화
-    std::vector<int> dist(100001, INF);
+    dq.push_back(N);
     dist[N] = 0;
 
-    // 비용 기준 오름차순 우선순위 큐
-    auto cmp = [](const std::pair<int, int>& a, const std::pair<int, int>& b) {
-        return a.second > b.second;
-    };
-    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, decltype(cmp)> pq(cmp);
+    while(!dq.empty())
+    {
+        int pos = dq.front();
+        dq.pop_front();
 
-    // 시작 노드
-    pq.push({N, 0});
-
-    while (!pq.empty()) {
-        auto [current, cost] = pq.top();
-        pq.pop();
-
-        // 이미 더 짧은 거리로 방문했으면 스킵
-        if (cost > dist[current]) continue;
-
-        // 목표 도달 시
-        if (current == K) {
-            std::cout << cost;
+        if (pos == K)
+        {
+            std::cout<<dist[pos];
             return 0;
         }
 
-        // 순간이동 (가중치 0)
-        int next = current * 2;
-        if (next <= 100000 && dist[next] > cost) {
-            dist[next] = cost;
-            pq.push({next, cost});
+        int next_pos = pos - 1;
+        if (next_pos >= 0 && dist[next_pos] > dist[pos] + 1)
+        {
+            dq.push_back(next_pos);
+            dist[next_pos] = dist[pos] + 1;
+        }
+        next_pos = pos + 1;
+        if (next_pos < 100001 && dist[next_pos] > dist[pos] + 1)
+        {
+            dq.push_back(next_pos);
+            dist[next_pos] = dist[pos] + 1;
         }
 
-        // 걷기 (가중치 1)
-        next = current - 1;
-        if (next >= 0 && dist[next] > cost + 1) {
-            dist[next] = cost + 1;
-            pq.push({next, cost + 1});
-        }
-
-        next = current + 1;
-        if (next <= 100000 && dist[next] > cost + 1) {
-            dist[next] = cost + 1;
-            pq.push({next, cost + 1});
+        next_pos = pos * 2;
+        if (next_pos < 100001 && dist[next_pos] > dist[pos])
+        {
+            dq.push_front(next_pos);
+            dist[next_pos] = dist[pos];
         }
     }
-
     return 0;
 }
